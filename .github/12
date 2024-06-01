@@ -1,0 +1,198 @@
+4) Создаем файл header.php в папке inc
+<?php
+$menu = "";
+if(isset($_SESSION['login'])){
+if($_SESSION['role'] == "Admin"){
+$menu .= '<li class="nav-item">
+<a class="nav-link" href="/admin/">Админ Панель</a>
+</li>';
+}
+$menu .= '<li class="nav-item">
+<a class="nav-link" href="/profile/">Личный кабинет</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="/admin/controllers/logout.php">Выйти </a>
+</li>';
+}else{
+$menu = '<li class="nav-item">
+ <a class="nav-link" href="/auth/">Вход</a>
+</li>
+<li class="nav-item">
+ <a class="nav-link" href="/register/">Регистрация</a>
+</li>';
+}
+?>
+тут//doctype (ru) (title)
+<link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/assets/style/style.css">
+</head>
+<body>
+<main class="text-success-emphasis">
+<header class="bg-info border-bottom border-success-emphasis">
+<div class="container-fluid d-flex align-items-center p-0">
+Вставка из zeal первые 8 строк
+<?=$menu?> и  8 закрывающих тегов
+0) admin application assets auth function inc profile register (index)
+1) Переносим файлы bootstrap и шрифты в папки assets/bootstrap и assets/style/font
+2) Создаем файл connect.php в папке function
+<?php 
+$connect = new mysqli("localhost", "логин", "пароль", "модуль_м1");
+if ($connect->connect_error){
+die ("Ошибка подключения к базе данных");
+}
+?>
+ 
+6) Создаем страницу Входа index.php в папке auth
+<?php
+session_start();
+if (isset($_SESSION['login'])){
+header("Location: /profile/");
+exit;
+}
+include "../inc/header.php";
+?>
+ <section class="page">
+<div class="container p-3">
+<?php
+if(isset($_GET['message'])){
+echo "<div class= 'border border-danger text-danger text-center pt-4 pb-4 mb-3'> 
+{$_GET['message']}
+</div>";
+}
+?>
+<body class="bg-secondary"> 
+<h1 class="text-center mb-3 text-white display-1">Вход</h1>
+<form action="/admin/controllers/login.php" method="post" class="m-auto">
+<div class="mb-3">
+<label for="login" class="form-label text-white fs-5">Ваш логин</label>
+<input type="text" class="form-control shadow-sm p-3 rounded-pill"
+id="login" name="login">
+</div>
+ 2 КНОПКА заменить password
+<input type="submit" class="btn btn-info text-white mb-3 mt-3 w-100 shadow-sm p-3
+fs-2 rounded-pill fw-bold" value="Войти">
+</form>
+</body>
+</div>
+</section>
+подвал
+ 
+
+7) Копируем страницу Вход (auth/index.php) в папку register
+<form action="/admin/controllers/registration.php" (до этой строчки подходит)
+8 кнопок surname
+name text name
+patronymic text patronymic
+login text login
+email
+phone tel phone
+password
+password-repeat password password-repeat
+<input type поменять
+</form>
+</section>
+Подключить подвал
+3) Создаем в папке assets папку style файл style
+@font-face {
+font-family: Raleway;
+src: url("font/raleway/static/Raleway-Regular.ttf");
+}
+header, footer { font-family: Raleway; }
+section.page { min-height: 83vh; }
+div.cards_btn a { width: 48%; }
+5) Создаем файл footer.php в папке inc
+<footer class="sticky-bottom bg-dark text-light">
+<div class="container-fluid p-3 pt-3">
+<p>@Нарушениям.Нет<br>2023-2024</p>
+</div>
+</footer>
+</main>
+<script src="/assets/bootstrap/js/bootstrap.bundle.js"></script>
+</body>
+</html>
+
+ 
+8) Копируем страницу Вход (auth/index.php) в папку application
+<?php
+session_start();
+if (!isset($_SESSION['login'])){
+header("Location: /auth/");
+exit;
+}
+include "../inc/header.php";
+?>
+Все подходит кроме 2 if
+<form action="/admin/controllers/add.application" method="post" class="m-auto">
+ТУТ КНОПКА number
+<div class="mb-3">
+<label for="message" class="form-label text-white fs-5">текст</label>
+<textarea class="form-control shadow-sm p-3 rounded-5"
+id="message" name="message" rows="5"></textarea>
+</div>
+<cтрока input>
+</form>
+</body>
+</div>
+</section>
+ПОДВАЛ
+ 
+9) главная страница 
+<?php 
+session_start(); 
+include "inc/header.php"; 
+?>
+<body class="bg-secondary">
+<div class="container p-3 text-center">
+<h1 class="mt-3 mb-4 text-white display-1">свой текст</h1>
+<p class="p-1 pt-4 display-6 text-light">свой текст</p>
+</div>
+<div class="container p-2 mb-5 text-center">
+<a href="/auth/" class="btn btn-success text-success-emphasis bg-light
+w-75 p-3 fs-2 rounded-pill fw-bold shadow-lg">Текст</a>
+<h2 class="display-4 mt-5 text-white">свой текст</h2>
+</div>
+</body>
++подвал (как и шапка) 
+ 
+10) Создаем страницу login.php в папке admin/controllers
+Начало пхп и начало сессии
+include '../../function/connect.php'; 
+$sql = sprintf("SELECT * FROM `user` WHERE `login` = '%s' AND `password` = '%s'", 
+$_POST['login'], $_POST['password']); 
+$result = $connect->query($sql); 
+if($result->num_rows){ 
+$row = $result->fetch_assoc(); 
+$_SESSION['login'] = $row['login']; 
+$_SESSION['role'] = $row['role']; 
+header("Location: /profile/"); 
+exit; 
+}else{ 
+header("Location: /auth/index.php?message=Некорректный логин или пароль"); 
+exit;
+}
+?>
+11) Создаем страницу logout.php в папке admin/controllers
+Пхп и начало сессии
+unset($_SESSION['login']); 
+unset($_SESSION['role']); 
+header("Location: /"); 
+exit;
+?>
+12) Создаем страницу regisration.php в папке admin/controllers
+<?php 
+session_start(); 
+include '../../function/connect.php'; 
+$sql = sprintf("INSERT INTO `user`(`user_id`, `surname`, `name`, `patronymic`, 
+`login`, `email`, `phone`, `password`, `role`) VALUES 
+(NULL,'%s','%s','%s','%s','%s','%s','%s','User')", 
+$_POST['surname'], 
+name patronymic login email phone password
+); 
+if(!$connect -> query($sql)){ 
+echo "Ошибка добавления данных"; 
+}
+$_SESSION['login'] = $_POST['login']; 
+$_SESSION['role'] = "User"; 
+header("Location: /profile/"); 
+exit; 
+?>
